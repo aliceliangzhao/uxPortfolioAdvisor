@@ -6,12 +6,17 @@ An AI tool that researches current best practices and generates a personalized g
 
 ## What you'll get
 
-A detailed portfolio structure guide (in Markdown and JSON) that includes:
-- What sections to include and why
-- How to write compelling case studies
-- What hiring managers actually look for
-- Common mistakes to avoid
-- All recommendations cited with real, current sources
+Two outputs tailored to your role, industry, and seniority level:
+
+1. **Portfolio Guide** (`portfolio-guide.md`) — a detailed, human-readable guide with:
+   - What sections to include and why
+   - How to write compelling case studies
+   - What hiring managers actually look for
+   - Common mistakes to avoid
+   - All recommendations cited with real, current sources
+   - Clear markers showing which advice is cited `[N]` vs. inferred `†`
+
+2. **Portfolio Rules** (`portfolio-rules.md`) — an opinionated rules file you can drop into any AI coding tool (Claude Code, Cursor, Kiro, Copilot, Windsurf) so it builds your portfolio the right way. Uses MUST/SHOULD/MUST NOT language that AI tools understand.
 
 ---
 
@@ -21,7 +26,7 @@ You'll need two things installed on your computer:
 
 1. **Node.js** (version 18 or newer)
    - Check if you have it: open Terminal and type `node --version`
-  - If not installed: download from <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer">nodejs.org</a> — pick the LTS version
+   - If not installed: download from [nodejs.org](https://nodejs.org) — pick the LTS version
 
 2. **Two free API keys** (explained below)
 
@@ -74,17 +79,16 @@ You need two keys — one for the AI, one for web search. Both have free tiers.
 | Brave Search | 1 req/sec free | [brave.com/search/api](https://brave.com/search/api) → Get Started |
 | Serper | 2500 free credits | [serper.dev](https://serper.dev) → Sign up → API Key |
 
-### Step 4: Create .env and add your keys
+### Step 4: Create the configuration file and add your keys
 
-In Terminal, in the same folder, run:
+In the terminal, in the same folder, run
 
 ```
 cp .env.example .env
 ```
+This command creates your configuration file `.env`. 
 
-This command creates your configuration file.
-
-Open the `.env` file in any text editor. Its content looks like this:
+Open this file in any text editor. It looks like this:
 
 ```
 ANTHROPIC_API_KEY=
@@ -108,30 +112,50 @@ Only fill in one AI key and one search key. Leave the rest blank or commented ou
 npm start
 ```
 
-That's it. The tool will:
+That's it. The tool will ask you three questions:
+
+1. What's your role?
+2. What industry are you targeting?
+3. Which seniority levels should the guide cover?
+
+Then it will:
 1. Search the web for current UX portfolio articles and research
 2. Synthesize everything into a structured guide
 3. Save the results to the `outputs/research/` folder
 
-Open `outputs/research/portfolio-structure.md` to read your guide.
+Your outputs:
+- `outputs/research/portfolio-guide.md` — the full guide with citations (for you to read)
+- `outputs/research/portfolio-rules.md` — opinionated rules for AI coding tools
+- `outputs/research/portfolio-guide.json` — machine-readable data
 
 ---
 
-## Customize it
+## Using the rules with AI coding tools
 
-Edit `config.yaml` to change who the guide is for:
+The `portfolio-rules.md` file is designed to be dropped into any AI coding tool as context. Here's how:
 
-```yaml
-research:
-  role: "product designer"       # your role
-  industry: "tech"               # your target industry
-  seniority:                     # levels to cover
-    - "senior"
-    - "principal"
-    - "staff"
+| Tool | Where to put it |
+|------|----------------|
+| Claude Code | Append the contents to `CLAUDE.md` in your project root |
+| Cursor | Copy to `.cursor/rules/portfolio-rules.md` in your project |
+| Kiro | Copy to `.kiro/steering/portfolio-rules.md` in your project |
+| GitHub Copilot | Append the contents to `.github/copilot-instructions.md` |
+| Windsurf | Copy to `.windsurfrules` in your project root |
+| Any tool | Paste into the system prompt or project context |
+
+---
+
+## Advanced usage
+
+Skip the interactive prompts with CLI flags:
+```
+npm start -- --role "product designer" --industry tech --seniority "senior,principal"
 ```
 
-Then run `npm start` again to regenerate.
+Force regenerate (ignore cached output):
+```
+npm start -- --no-cache
+```
 
 ---
 
