@@ -21,7 +21,7 @@ You'll need two things installed on your computer:
 
 1. **Node.js** (version 18 or newer)
    - Check if you have it: open Terminal and type `node --version`
-   - If not installed: download from [nodejs.org](https://nodejs.org) — pick the LTS version
+  - If not installed: download from <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer">nodejs.org</a> — pick the LTS version
 
 2. **Two free API keys** (explained below)
 
