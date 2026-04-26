@@ -12,7 +12,8 @@
     "commander": "^13.0.0",
     "dotenv": "^16.4.0",
     "zod": "^3.24.0",
-    "fs-extra": "^11.2.0"
+    "fs-extra": "^11.2.0",
+    "ora": "^6.1.2"
   },
   "optionalDependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.705.0"
