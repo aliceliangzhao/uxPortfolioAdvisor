@@ -24,15 +24,15 @@ Two outputs tailored to your role, industry, and seniority level:
 
 You'll need two things installed on your computer:
 
-1. **Node.js** (version 18 or newer)
-   - Check if you have it: open Terminal and type `node --version`
-   - If not installed: download from [nodejs.org](https://nodejs.org) — pick the LTS version
+**Node.js** (version 18 or newer)
+- Check if you have it: open Terminal and type `node --version`
+- If not installed: download from [nodejs.org](https://nodejs.org) — pick the LTS version
 
-2. **Two free API keys** (explained below)
+You'll also need two free API keys (the tool will walk you through getting them on first run).
 
 ---
 
-## Setup (5 minutes)
+## Setup (3 minutes)
 
 ### Step 1: Download the project
 
@@ -57,10 +57,22 @@ npm install
 
 This command downloads everything the tool needs. You only do this once.
 
-### Step 3: Get your API keys
+Then run:
 
+```
+npm start
+```
 
-You need two keys — one LLM provider key, one for web search. Both have free tiers.
+On first run, the tool walks you through setting up your API keys right in the terminal:
+
+1. Pick an LLM provider and paste your key
+2. Pick a web search provider and paste your key
+
+Your keys are saved locally in a `.env` file (never uploaded anywhere). On future runs, it skips this step and goes straight to the questions.
+
+To reconfigure your keys later: `npm start -- setup`
+
+### Where to get your API keys
 
 **LLM provider key (pick one):**
 
@@ -80,31 +92,6 @@ You need two keys — one LLM provider key, one for web search. Both have free t
 | Tavily | 1000 searches/month | [tavily.com](https://tavily.com) → Sign up → API Key |
 | Brave Search | 1 req/sec free | [brave.com/search/api](https://brave.com/search/api) → Get Started |
 | Serper | 2500 free credits | [serper.dev](https://serper.dev) → Sign up → API Key |
-
-### Step 4: Create the configuration file and add your keys
-
-In the terminal, in the same folder, run
-
-```
-cp .env.example .env
-```
-This command creates your configuration file `.env`. 
-
-Open this file in any text editor. It looks like this:
-
-```
-ANTHROPIC_API_KEY=
-EXA_API_KEY=
-```
-
-Paste your keys after the `=` sign. For example:
-
-```
-ANTHROPIC_API_KEY=sk-ant-abc123...
-EXA_API_KEY=exa-xyz789...
-```
-
-Only fill in one AI key and one search key. Leave the rest blank or commented out.
 
 ---
 
