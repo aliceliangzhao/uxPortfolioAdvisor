@@ -48,9 +48,10 @@ Open Terminal, navigate to this folder, and run:
 
 ```
 npm install
+cp .env.example .env
 ```
 
-This downloads everything the tool needs. You only do this once.
+The first command downloads everything the tool needs. The second command creates your configuration file. You only do this once.
 
 ### Step 3: Get your API keys
 
