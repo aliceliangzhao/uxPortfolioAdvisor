@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * CLI for the UX Portfolio Research Agent.
+ * CLI for the UX Portfolio Advisor.
  * Usage: npm start [options]
  */
 

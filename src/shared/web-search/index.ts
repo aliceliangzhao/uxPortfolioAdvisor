@@ -132,7 +132,7 @@ async function searchExa(apiKey: string, query: string, maxResults: number): Pro
       numResults: maxResults,
       useAutoprompt: true,
       type: "auto",
-      contents: { text: { maxCharacters: 500 } },
+      contents: { text: { maxCharacters: 4000 } },
     }),
   });
   if (!res.ok) { console.warn(`[Exa] ${res.status}`); return []; }

@@ -1,5 +1,5 @@
 /**
- * UX Portfolio Research Agent
+ * UX Portfolio Advisor
  *
  * Searches the web for current portfolio best practices, then synthesizes
  * them into a structured guide with proper citations. Outputs:
@@ -41,11 +41,11 @@ design portfolio reviews, and made hiring decisions at the senior, principal, an
 Your task is to advise designers on what actually moves the needle in a portfolio from the
 perspective of someone who will be evaluating and hiring them.
 
-CRITICAL RULES FOR SOURCES:
-- You MUST ONLY cite sources that are provided in the "Web Research Results" section below.
-- Do NOT invent, fabricate, or recall sources from your training data.
-- Every [N] citation in your output MUST correspond to a source from the provided web results.
-- If the web results don't cover a topic, state your guidance without a citation — do not make one up.
+CRITICAL RULES FOR SOURCES AND ATTRIBUTION:
+- Use [N] citations for claims backed by a specific web source from the "Web Research Results" section.
+- Use † to mark guidance that is inferred from your own synthesis or expertise (not directly from a provided source).
+- Do NOT invent or fabricate source citations. Every [N] must correspond to a real provided source.
+- If the web results don't cover a topic, you may still provide guidance — just mark it with † instead of [N].
 - In the "sources" array, only include sources from the provided web results, using their exact titles and URLs.`;
 
   const prompt = `Create a comprehensive portfolio structure guide for a ${role}
@@ -54,11 +54,12 @@ targeting the ${industry} industry. The guide should cover the following seniori
 For each seniority level, tailor the guidance to reflect the expectations at that level
 (e.g., senior focuses on craft depth, principal on strategic impact, staff on org-wide influence).
 
-IMPORTANT — Citation requirements:
-- Use numbered in-text citations [1], [2], etc. throughout the guidance text wherever you reference
-  a specific source, best practice, or research finding.
+IMPORTANT — Citation and attribution requirements:
+- Use numbered in-text citations [1], [2], etc. when referencing a specific web source.
+- Use † to mark advice that comes from your own synthesis or expertise, not a specific source.
 - Each source must have a unique number.
 - In the "sources" array, provide structured source objects with id, title, author, year, url (if available), and type.
+- Aim for a mix of cited [N] and inferred † guidance — both are valuable, but the reader should know which is which.
 
 Return a JSON object matching this exact structure:
 {
@@ -71,7 +72,7 @@ Return a JSON object matching this exact structure:
       "title": "string",
       "required": boolean,
       "description": "string",
-      "guidance": "string (include [N] citations referencing sources)",
+      "guidance": "string (use [N] for cited claims, † for inferred advice)",
       "antiPatterns": ["string"]
     }
   ],
@@ -132,6 +133,8 @@ function formatAsMarkdown(data: PortfolioStructure): string {
     `# UX Portfolio Structure Guide`,
     `**Role:** ${data.role} | **Seniority:** ${data.seniority} | **Industry:** ${data.industry}`,
     `**Generated:** ${data.generatedAt}`,
+    ``,
+    `> **Legend:** \`[N]\` = cited from web source | \`†\` = inferred from synthesis`,
     ``,
     `## Portfolio Sections`,
     ...data.portfolioSections.map((s) => [

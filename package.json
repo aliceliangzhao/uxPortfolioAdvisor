@@ -1,7 +1,7 @@
 {
   "name": "ux-portfolio-advisor",
   "version": "0.1.0",
-  "description": "AI-powered advisor that generates UX portfolio structure guides grounded in current web sources",
+  "description": "AI-powered tool that generates UX portfolio structure guides grounded in current web sources",
   "type": "module",
   "scripts": {
     "build": "tsc",
