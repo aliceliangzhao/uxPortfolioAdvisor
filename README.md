@@ -48,10 +48,9 @@ Open Terminal, navigate to this folder, and run:
 
 ```
 npm install
-cp .env.example .env
 ```
 
-The first command downloads everything the tool needs. The second command creates your configuration file. You only do this once.
+This command downloads everything the tool needs. You only do this once.
 
 ### Step 3: Get your API keys
 
@@ -75,9 +74,17 @@ You need two keys — one for the AI, one for web search. Both have free tiers.
 | Brave Search | 1 req/sec free | [brave.com/search/api](https://brave.com/search/api) → Get Started |
 | Serper | 2500 free credits | [serper.dev](https://serper.dev) → Sign up → API Key |
 
-### Step 4: Add your keys
+### Step 4: Create .env and add your keys
 
-Open the `.env` file in any text editor. It looks like this:
+In Terminal, in the same folder, run:
+
+```
+cp .env.example .env
+```
+
+This command creates your configuration file.
+
+Open the `.env` file in any text editor. Its content looks like this:
 
 ```
 ANTHROPIC_API_KEY=
