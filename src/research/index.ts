@@ -46,7 +46,6 @@ CRITICAL RULES FOR SOURCES AND ATTRIBUTION:
 - Use [N] citations for claims backed by a specific web source from the "Web Research Results" section.
 - Use † to mark guidance that is inferred from your own synthesis or expertise (not directly from a provided source).
 - Do NOT invent or fabricate source citations. Every [N] must correspond to a real provided source.
-- If the web results don't cover a topic, you may still provide guidance — just mark it with † instead of [N].
 - In the "sources" array, only include sources from the provided web results, using their exact titles and URLs.`;
 
   const prompt = `Create a comprehensive portfolio structure guide for a ${role}
