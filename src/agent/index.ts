@@ -13,6 +13,7 @@ import { writeOutput, readOutput, outputExists } from "../shared/storage/index.j
 import { PortfolioStructureSchema } from "../shared/schemas/portfolio-structure.js";
 import { DEFAULT_SENIORITY, DEFAULT_ROLE, DEFAULT_INDUSTRY } from "../shared/defaults.js";
 import type { PortfolioStructure } from "../shared/schemas/portfolio-structure.js";
+import ora from "ora";
 
 export interface ResearchParams {
   role: string;
@@ -32,7 +33,7 @@ export async function runResearchAgent(params: ResearchParams): Promise<Portfoli
     return PortfolioStructureSchema.parse(JSON.parse(cached!));
   }
 
-  console.log(`[Research] Gathering portfolio best practices for ${seniority} ${role} in ${industry}...`);
+  console.log(`\n🔍 Generating portfolio guide for ${seniority} ${role} in ${industry}\n`);
 
   const systemPrompt = `You are a UX design manager, director, or product manager at a high-paying
 tech company (or tech-adjacent company like fintech, healthtech, or design tooling) who is actively
@@ -99,7 +100,7 @@ Return a JSON object matching this exact structure:
 Be specific and actionable. Include 6-8 portfolio sections and 5-7 case study sections.`;
 
   // Search the web for current sources
-  console.log("[Research] Searching for current portfolio best practices...");
+  const searchSpinner = ora("Searching the web for current portfolio best practices...").start();
   const searchResults = await searchWeb(
     `UX portfolio best practices ${seniority} product designer ${new Date().getFullYear()}`,
     { maxResults: params.maxSources ?? 10 }
@@ -108,23 +109,31 @@ Be specific and actionable. Include 6-8 portfolio sections and 5-7 case study se
 
   let finalPrompt = prompt;
   if (webContext) {
-    console.log(`[Research] Found ${searchResults.length} sources. Augmenting prompt...`);
+    searchSpinner.succeed(`Found ${searchResults.length} sources`);
     finalPrompt = `${prompt}\n\n---\n\n# Web Research Results (ONLY USE THESE AS SOURCES)\n\nThese are the ONLY sources you may cite. Do not add any sources beyond this list.\n\n${webContext}`;
   } else {
-    console.log("[Research] No web results available. Using model knowledge only.");
+    searchSpinner.warn("No web results available — using model knowledge only");
   }
 
+  const generateSpinner = ora("Synthesizing portfolio guide (this may take a minute)...").start();
   const raw = await generate(systemPrompt, finalPrompt, { maxTokens: 16000 });
 
+  generateSpinner.text = "Parsing and validating output...";
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("[Research] Model did not return valid JSON");
+  if (!jsonMatch) {
+    generateSpinner.fail("Model did not return valid JSON");
+    throw new Error("[Research] Model did not return valid JSON");
+  }
 
   const data = PortfolioStructureSchema.parse(JSON.parse(jsonMatch[0]));
+  generateSpinner.succeed("Guide generated");
 
+  const saveSpinner = ora("Saving output...").start();
   await writeOutput("research", "portfolio-structure.json", data);
   await writeOutput("research", "portfolio-structure.md", formatAsMarkdown(data));
+  saveSpinner.succeed("Saved to outputs/research/");
 
-  console.log("[Research] Done. Output written to outputs/research/");
+  console.log("\n✅ Done! Open outputs/research/portfolio-structure.md to read your guide.\n");
   return data;
 }
 
