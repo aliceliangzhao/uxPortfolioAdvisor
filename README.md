@@ -59,16 +59,18 @@ This command downloads everything the tool needs. You only do this once.
 
 ### Step 3: Get your API keys
 
-You need two keys — one for the AI, one for web search. Both have free tiers.
 
-**AI key (pick one):**
+You need two keys — one LLM provider key, one for web search. Both have free tiers.
 
-| Provider | Free tier | How to get it |
-|----------|-----------|---------------|
-| Anthropic | $5 credit to start | [console.anthropic.com](https://console.anthropic.com) → Sign up → API Keys |
-| OpenAI | Pay-as-you-go | [platform.openai.com](https://platform.openai.com) → Sign up → API Keys |
-| Google Gemini | Free | [aistudio.google.com](https://aistudio.google.com) → Get API Key |
-| OpenRouter | $1 free credit | [openrouter.ai](https://openrouter.ai) → Sign up → Keys |
+**LLM provider key (pick one):**
+
+| Provider        | Free tier           | How to get it |
+|----------------|---------------------|---------------|
+| Anthropic      | $5 credit to start  | [console.anthropic.com](https://console.anthropic.com) → Sign up → API Keys |
+| OpenAI         | Pay-as-you-go       | [platform.openai.com](https://platform.openai.com) → Sign up → API Keys |
+| Google Gemini  | Free                | [aistudio.google.com](https://aistudio.google.com) → Get API Key |
+| OpenRouter     | $1 free credit      | [openrouter.ai](https://openrouter.ai) → Sign up → Keys |
+| AWS Bedrock    | Free tier available | [console.aws.amazon.com/bedrock](https://console.aws.amazon.com/bedrock) → Sign up → API Keys |
 
 **Web search key (pick one):**
 
