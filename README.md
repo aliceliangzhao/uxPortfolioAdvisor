@@ -155,3 +155,8 @@ npm start -- --no-cache
 **"npm: command not found"** — Node.js isn't installed. Download it from [nodejs.org](https://nodejs.org).
 
 **The output has old or made-up sources** — Make sure your web search key is set. Without it, the AI relies on its training data which may be outdated.
+
+---
+
+## Questions? Feedback? Suggestions?
+Report bugs or suggest features via [Issues]([https://github.com/Alishahryar1/free-claude-code/issues](https://github.com/miyakelly/uxPortfolioAdvisor/issues))
