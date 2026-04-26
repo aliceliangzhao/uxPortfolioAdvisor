@@ -1,0 +1,27 @@
+{
+  "name": "ux-portfolio-advisor",
+  "version": "0.1.0",
+  "description": "AI-powered advisor that generates UX portfolio structure guides grounded in current web sources",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/cli.ts",
+    "research": "tsx src/cli.ts research"
+  },
+  "dependencies": {
+    "commander": "^13.0.0",
+    "dotenv": "^16.4.0",
+    "zod": "^3.24.0",
+    "fs-extra": "^11.2.0"
+  },
+  "optionalDependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.705.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

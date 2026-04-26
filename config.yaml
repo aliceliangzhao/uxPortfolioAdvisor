@@ -1,0 +1,11 @@
+# UX Portfolio Research Agent Configuration
+
+research:
+  role: "product designer"          # product designer | ux researcher | ic | manager
+  industry: "tech"                  # tech | agency | healthcare | fintech
+  seniority:                        # senior | principal | staff
+    - "senior"
+    - "principal"
+    - "staff"
+  max_sources: 10                   # number of web sources to search
+  use_cache: true                   # set false to always regenerate

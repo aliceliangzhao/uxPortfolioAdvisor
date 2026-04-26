@@ -1,0 +1,173 @@
+/**
+ * UX Portfolio Research Agent
+ *
+ * Searches the web for current portfolio best practices, then synthesizes
+ * them into a structured guide with proper citations. Outputs:
+ *   - outputs/research/portfolio-structure.md  (human-readable)
+ *   - outputs/research/portfolio-structure.json (machine-readable, validated)
+ */
+
+import { generate } from "../shared/llm/client.js";
+import { searchWeb, formatSearchResultsForPrompt } from "../shared/web-search/index.js";
+import { writeOutput, readOutput, outputExists } from "../shared/storage/index.js";
+import { PortfolioStructureSchema } from "../shared/schemas/portfolio-structure.js";
+import { DEFAULT_SENIORITY, DEFAULT_ROLE, DEFAULT_INDUSTRY } from "../shared/defaults.js";
+import type { PortfolioStructure } from "../shared/schemas/portfolio-structure.js";
+
+export interface ResearchParams {
+  role: string;
+  industry: string;
+  seniority: string | string[];
+  maxSources?: number;
+  useCache?: boolean;
+}
+
+export async function runResearchAgent(params: ResearchParams): Promise<PortfolioStructure> {
+  const { role, industry, seniority: rawSeniority, useCache = true } = params;
+  const seniority = Array.isArray(rawSeniority) ? rawSeniority.join(", ") : rawSeniority;
+
+  if (useCache && await outputExists("research", "portfolio-structure.json")) {
+    console.log("[Research] Using cached output.");
+    const cached = await readOutput("research", "portfolio-structure.json");
+    return PortfolioStructureSchema.parse(JSON.parse(cached!));
+  }
+
+  console.log(`[Research] Gathering portfolio best practices for ${seniority} ${role} in ${industry}...`);
+
+  const systemPrompt = `You are a UX design manager, director, or product manager at a high-paying
+tech company (or tech-adjacent company like fintech, healthtech, or design tooling) who is actively
+hiring senior-and-above designers for your team. You have reviewed hundreds of portfolios, conducted
+design portfolio reviews, and made hiring decisions at the senior, principal, and staff levels.
+Your task is to advise designers on what actually moves the needle in a portfolio from the
+perspective of someone who will be evaluating and hiring them.
+
+CRITICAL RULES FOR SOURCES:
+- You MUST ONLY cite sources that are provided in the "Web Research Results" section below.
+- Do NOT invent, fabricate, or recall sources from your training data.
+- Every [N] citation in your output MUST correspond to a source from the provided web results.
+- If the web results don't cover a topic, state your guidance without a citation — do not make one up.
+- In the "sources" array, only include sources from the provided web results, using their exact titles and URLs.`;
+
+  const prompt = `Create a comprehensive portfolio structure guide for a ${role}
+targeting the ${industry} industry. The guide should cover the following seniority levels: ${seniority}.
+
+For each seniority level, tailor the guidance to reflect the expectations at that level
+(e.g., senior focuses on craft depth, principal on strategic impact, staff on org-wide influence).
+
+IMPORTANT — Citation requirements:
+- Use numbered in-text citations [1], [2], etc. throughout the guidance text wherever you reference
+  a specific source, best practice, or research finding.
+- Each source must have a unique number.
+- In the "sources" array, provide structured source objects with id, title, author, year, url (if available), and type.
+
+Return a JSON object matching this exact structure:
+{
+  "role": "${role}",
+  "seniority": "${seniority}",
+  "industry": "${industry}",
+  "portfolioSections": [
+    {
+      "id": "string",
+      "title": "string",
+      "required": boolean,
+      "description": "string",
+      "guidance": "string (include [N] citations referencing sources)",
+      "antiPatterns": ["string"]
+    }
+  ],
+  "caseStudyTemplate": {
+    "sections": [ ...same shape as portfolioSections... ],
+    "minArtifacts": number,
+    "recommendedLength": "string"
+  },
+  "hiringManagerPriorities": ["string (include [N] citations where relevant)"],
+  "antiPatterns": ["string"],
+  "sources": [
+    {
+      "id": 1,
+      "title": "Article or book title",
+      "author": "Author or organization name",
+      "year": "2024",
+      "url": "https://example.com/article (optional)",
+      "type": "article | book | talk | report | website"
+    }
+  ],
+  "generatedAt": "${new Date().toISOString()}"
+}
+
+Be specific and actionable. Include 6-8 portfolio sections and 5-7 case study sections.`;
+
+  // Search the web for current sources
+  console.log("[Research] Searching for current portfolio best practices...");
+  const searchResults = await searchWeb(
+    `UX portfolio best practices ${seniority} product designer ${new Date().getFullYear()}`,
+    { maxResults: params.maxSources ?? 10 }
+  );
+  const webContext = formatSearchResultsForPrompt(searchResults);
+
+  let finalPrompt = prompt;
+  if (webContext) {
+    console.log(`[Research] Found ${searchResults.length} sources. Augmenting prompt...`);
+    finalPrompt = `${prompt}\n\n---\n\n# Web Research Results (ONLY USE THESE AS SOURCES)\n\nThese are the ONLY sources you may cite. Do not add any sources beyond this list.\n\n${webContext}`;
+  } else {
+    console.log("[Research] No web results available. Using model knowledge only.");
+  }
+
+  const raw = await generate(systemPrompt, finalPrompt, { maxTokens: 16000 });
+
+  const jsonMatch = raw.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("[Research] Model did not return valid JSON");
+
+  const data = PortfolioStructureSchema.parse(JSON.parse(jsonMatch[0]));
+
+  await writeOutput("research", "portfolio-structure.json", data);
+  await writeOutput("research", "portfolio-structure.md", formatAsMarkdown(data));
+
+  console.log("[Research] Done. Output written to outputs/research/");
+  return data;
+}
+
+function formatAsMarkdown(data: PortfolioStructure): string {
+  const lines: string[] = [
+    `# UX Portfolio Structure Guide`,
+    `**Role:** ${data.role} | **Seniority:** ${data.seniority} | **Industry:** ${data.industry}`,
+    `**Generated:** ${data.generatedAt}`,
+    ``,
+    `## Portfolio Sections`,
+    ...data.portfolioSections.map((s) => [
+      `### ${s.required ? "✓" : "○"} ${s.title}`,
+      s.description,
+      `**Guidance:** ${s.guidance}`,
+      s.antiPatterns.length ? `**Avoid:** ${s.antiPatterns.join("; ")}` : "",
+      "",
+    ].join("\n")),
+    `## Case Study Template`,
+    `*${data.caseStudyTemplate.recommendedLength} | Min ${data.caseStudyTemplate.minArtifacts} artifacts*`,
+    ``,
+    ...data.caseStudyTemplate.sections.map((s) => `### ${s.title}\n${s.guidance}\n`),
+    `## What Hiring Managers Prioritize`,
+    ...data.hiringManagerPriorities.map((p) => `- ${p}`),
+    ``,
+    `## Anti-Patterns to Avoid`,
+    ...data.antiPatterns.map((p) => `- ${p}`),
+    ``,
+    `---`,
+    ``,
+    `## References`,
+    ``,
+    ...data.sources.map((s) => {
+      const urlPart = s.url ? ` Available at: ${s.url}` : "";
+      return `[${s.id}] ${s.author} (${s.year}). *${s.title}*. ${s.type}.${urlPart}`;
+    }),
+  ];
+  return lines.join("\n");
+}
+
+// Run directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  runResearchAgent({
+    role: DEFAULT_ROLE,
+    industry: DEFAULT_INDUSTRY,
+    seniority: DEFAULT_SENIORITY,
+  }).catch(console.error);
+}
