@@ -22,9 +22,7 @@ Two outputs tailored to your role, industry, and seniority level:
 
 ## Before you start
 
-You'll need two things installed on your computer:
-
-**Node.js** (version 18 or newer)
+You need to install **Node.js** on your computer:
 - Check if you have it: open Terminal and type `node --version`
 - If not installed: download from [nodejs.org](https://nodejs.org) — pick the LTS version
 

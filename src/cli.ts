@@ -85,7 +85,7 @@ async function ensureKeys(): Promise<void> {
 
  if (needsLLM) {
    const provider = await select({
-     message: "Which AI provider do you want to use?",
+     message: "Which LLM provider do you want to use?",
      choices: LLM_PROVIDERS.map((p) => ({ name: p.name, value: p })),
    });
    console.log(`\n   Get your key here: ${provider.url}\n`);
