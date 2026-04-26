@@ -33,12 +33,12 @@ You'll need two things installed on your computer:
 
 Click the button below to download, then unzip it anywhere on your computer.
 
-[![Download ZIP](https://img.shields.io/badge/Download-ZIP-blue?style=for-the-badge)](https://github.com/YOUR_USERNAME/uxPortfolioAdvisor/archive/refs/heads/main.zip)
+[![Download ZIP](https://img.shields.io/badge/Download-ZIP-blue?style=for-the-badge)](https://github.com/miyakelly/uxPortfolioAdvisor/archive/refs/heads/main.zip)
 
 Or if you're comfortable with Terminal:
 
 ```
-git clone https://github.com/YOUR_USERNAME/uxPortfolioAdvisor.git
+git clone https://github.com/miyakelly/uxPortfolioAdvisor.git
 cd uxPortfolioAdvisor
 ```
 
