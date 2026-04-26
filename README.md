@@ -159,4 +159,4 @@ npm start -- --no-cache
 ---
 
 ## Questions? Feedback? Suggestions?
-Report bugs or suggest features via [Issues]([https://github.com/Alishahryar1/free-claude-code/issues](https://github.com/miyakelly/uxPortfolioAdvisor/issues))
+Report bugs or suggest features via [Issues](https://github.com/miyakelly/uxPortfolioAdvisor/issues)
