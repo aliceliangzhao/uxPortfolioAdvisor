@@ -1,6 +1,6 @@
-# UX Portfolio Advisor
+# Portfolio Site Advisor
 
-An AI tool that researches current best practices and generates a personalized guide for building an effective UX portfolio — tailored to your role, seniority level, and target industry. It searches the web in real time for advice from hiring managers, design leaders, and reputable UX experts, so every recommendation is backed by up-to-date, cited sources.
+An AI tool that researches current best practices and generates a personalized guide for building an effective UX/Product portfolio — tailored to your role, seniority level, and target industry. It searches the web in real time for advice from hiring managers, design leaders, and reputable UX experts, so every recommendation is backed by up-to-date, cited sources.
 
 ---
 
