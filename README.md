@@ -36,12 +36,12 @@ You'll also need two free API keys (the tool will walk you through getting them 
 
 Click the button below to download, then unzip it anywhere on your computer.
 
-[![Download ZIP](https://img.shields.io/badge/Download-ZIP-blue?style=for-the-badge)](https://github.com/miyakelly/uxPortfolioAdvisor/archive/refs/heads/main.zip)
+[![Download ZIP](https://img.shields.io/badge/Download-ZIP-blue?style=for-the-badge)](https://github.com/aliceliangzhao/uxPortfolioAdvisor/archive/refs/heads/main.zip)
 
 Or if you're comfortable with Terminal:
 
 ```
-git clone https://github.com/miyakelly/uxPortfolioAdvisor.git
+git clone https://github.com/aliceliangzhao/uxPortfolioAdvisor.git
 cd uxPortfolioAdvisor
 ```
 
@@ -159,4 +159,4 @@ npm start -- --no-cache
 ---
 
 ## Questions? Feedback? Suggestions?
-Report bugs or suggest features via [Issues](https://github.com/miyakelly/uxPortfolioAdvisor/issues)
+Report bugs or suggest features via [Issues](https://github.com/aliceliangzhao/uxPortfolioAdvisor/issues)
